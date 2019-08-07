@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# by Jesus Luis Cedrun
+#
+# execute :  ./script2 hostname
+#
+if test "$1" = ""
+then
+    echo "Must pass a parameter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 1
+fi
+#
+#
+unix_server="$1"
+#
+ssh -n ${unix_server} "echo 'true'" 1>/dev/null 2>&1 
+if [ $? == 0 ]; then
+ echo "SSH Working Good : Continue with action"
+else
+ echo "SST Not Working : Kindly check with host name that you selected !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" 
+ exit 1
+fi
+#
+# Working Variables
+fecha=`date +%Y%m%d`
+hora=`date +%H%M%S`
+CPU_user=`ssh ${unix_server} mpstat -P ALL |grep all 2>/dev/null | awk '{ print $4 }'`
+CPU_nice=`ssh ${unix_server} mpstat -P ALL |grep all 2>/dev/null | awk '{ print $5 }'`
+CPU_sys=`ssh ${unix_server} mpstat -P ALL |grep all 2>/dev/null | awk '{ print $6 }'`
+CPU_idle=`ssh ${unix_server} mpstat -P ALL |grep all 2>/dev/null | awk '{ print $12 }'`
+##
+MEM_TOT=`ssh ${unix_server} free -mt | grep "Total:" 2>/dev/null | awk '{ print $2 }'`
+MEM_used=`ssh ${unix_server} free -mt | grep "Total:" 2>/dev/null | awk '{ print $3 }'`
+MEM_free=`ssh ${unix_server} free -mt | grep "Total:" 2>/dev/null | awk '{ print $4 }'`
+##
+HDD_sda2_tps=`ssh ${unix_server} iostat -p | grep sda2 2>/dev/null | awk '{ print $2 }'`
+##
+#Printing in a file
+echo "${fecha}|${hora}|${CPU_user}|${CPU_nice}|${CPU_sys}|${MEM_TOT}|${MEM_used}|${MEM_free}|${HDD_sda2_tps} >> /opt/monitor/data/datafile_${fecha}.out
+##
+exit 0
+========================================= after =======================
+Can have another programs who can read this file /opt/monitor/data/datafile_${fecha}.out
+and treat the information there
+
+
