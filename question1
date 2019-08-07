@@ -1,0 +1,73 @@
+Add the following in the ~/.bashrc file
+
+# Set Proxy
+function setproxy() {
+    export {http}_proxy="http://squid.axa.local:8080"
+    export {https}_proxy="http://squid.axa.local:8081"
+    export {ftp}_proxy="http://squid.axa.local:8082"
+}
+
+# Unset Proxy
+function unsetproxy() {
+    unset {http,https,ftp}_proxy
+}
+
+
+# add IP in the etc file
+function addEtcHosts2Proxy() {
+    /home/kostqqu/tools/add_ip_in_etc_hosts
+}
+
+
+
+Reload the ~/.bashrc file.
+
+$ source ~/.bashrc
+
+Now, you can use the command setproxy, and to unsetproxy to load or unload the configuration.
+and also to execute the program below with the function addEtcHosts2Proxy
+
+
+
+[kostqqu@dljnasjmp01 ~]$ cat /home/kostqqu/tools/add_ip_in_etc_hosts
+#!/bin/bash
+#
+# by Jesus Luis Cedrun
+#
+if test "$1" = ""
+then
+    echo "Must pass an IP as 1st parameter !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 1
+fi
+#
+if test "$2" = ""
+then
+    echo "Must pass a hostname as 2nd parameter !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 2
+fi
+#
+ip_server="$1"
+hostname_server="$2"
+#
+grep "${ip_server}" /etc/hosts 1>/dev/null 2>&1
+if [ $? == 0 ]; then
+ echo "Already exist the IP entered that you are trying to add"
+ exit 3
+fi
+#
+grep "${hostname_server}" /etc/hosts 1>/dev/null 2>&1
+if [ $? == 0 ]; then
+ echo "Already exist the hostname entered, that you are trying to add"
+ exit 4
+fi
+#
+# Esta todo bien
+echo "${ip_server}     ${hostname_server}" >> /etc/hosts
+if [ $? == 0 ]; then
+ echo "IP ${ip_server}     ${hostname_server} ADDED"
+else
+ echo "${ip_server}     ${hostname_server} NOT ADDED, due to the /etc/hosts file"
+ exit 5
+fi
+exit 0
+
