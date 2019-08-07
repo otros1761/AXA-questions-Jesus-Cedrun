@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# by Jesus Luis Cedrun
+#
+# 
+while true
+do
+   echo "Checking MEM load with free -mt COMMAND" 
+   echo "============================================"
+   free -mt
+   echo -e "\n \n"
+   echo "Checking CPU & nice load with mpstat -P ALL COMMAND" 
+   echo "==================================================="
+   mpstat -P ALL
+   echo -e "\n \n"
+   echo "Checking HDD load with iostat -p ALL COMMAND" 
+   echo "============================================"
+   iostat -p
+   echo -e "\n \n"
+   #
+   sleep 60
+done
+exit 0
