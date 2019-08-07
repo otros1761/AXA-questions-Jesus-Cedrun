@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# by Jesus Luis Cedrun
+#
+if test "$1" = ""
+then
+    echo "Must pass the URL as 1st parameter !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 1
+fi
+#
+url="$1"
+#
+if curl --output /dev/null --silent --head --fail "$url"; then
+  echo "URL exists: $url"
+  exit 0
+else
+  echo "URL does not exist: $url"
+  exit 1
+fi
